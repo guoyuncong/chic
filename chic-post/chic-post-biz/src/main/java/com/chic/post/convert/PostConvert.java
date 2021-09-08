@@ -41,7 +41,6 @@ public interface PostConvert {
     @Mapping(target = "publishTime", source = "postParam.publishTime")
     @Mapping(target = "digest", source = "postParam.digest")
     @Mapping(target = "keywords", source = "postParam.keywords")
-    @Mapping(target = "status", source = "postParam.status")
     @Mapping(target = "cover", source = "postParam.cover")
     @Mapping(target = "topFlag", source = "postParam.topFlag")
     @Mapping(target = "commentFlag", source = "postParam.commentFlag")

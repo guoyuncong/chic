@@ -45,6 +45,7 @@
       <artifactId>fastjson</artifactId>
     </dependency>
 
+    <!-- 解决 bootstrap.yml 文件配置不生效 -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-bootstrap</artifactId>

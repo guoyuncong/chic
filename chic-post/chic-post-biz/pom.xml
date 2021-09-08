@@ -15,17 +15,35 @@
 
   <dependencies>
 
+    <!-- spring boot starter web -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- 解决 bootstrap.yml 文件配置不生效 -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-bootstrap</artifactId>
+    </dependency>
+
+    <!-- nacos 服务注册中心 -->
+    <dependency>
+      <groupId>com.alibaba.cloud</groupId>
+      <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+
+    <!-- nacos 配置中心 -->
+    <dependency>
+      <groupId>com.alibaba.cloud</groupId>
+      <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+    </dependency>
+
     <!-- post-api -->
     <dependency>
       <groupId>com.chic</groupId>
       <artifactId>chic-post-api</artifactId>
       <version>1.0</version>
-    </dependency>
-
-    <!-- spring-web -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
     </dependency>
 
     <!-- mapstruct -->

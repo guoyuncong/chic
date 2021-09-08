@@ -1,5 +1,5 @@
 server:
-  port: 9999
+  port: 8081
 spring:
   application:
     name: @artifactId@
@@ -14,7 +14,6 @@ spring:
         namespace: @project.namespace@
         extension-configs:
           -
-            dataId: application-common.${spring.cloud.nacos.config.file-extension}
+            dataId: application-common.yaml
             group: DEFAULT_GROUP
             refresh: true
-
