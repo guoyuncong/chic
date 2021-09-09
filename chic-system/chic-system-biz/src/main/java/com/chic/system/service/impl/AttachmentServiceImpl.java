@@ -1,4 +1,3 @@
-/*
 package com.chic.system.service.impl;
 
 import cn.hutool.core.date.DateUtil;
@@ -8,8 +7,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.chic.core.base.constants.ChicConstants;
+import com.chic.core.util.FilenameUtils;
 import com.chic.mybatis.util.PageConvertUtil;
-import com.chic.system.base.constants.SystemConstants;
 import com.chic.system.convert.AttachmentConvert;
 import com.chic.system.entity.Attachment;
 import com.chic.system.mapper.AttachmentMapper;
@@ -31,13 +31,12 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 
-*/
 /**
  * 附件
  *
  * @author: yc
  * @date: 2021-07-08
- *//*
+ */
 
 @Slf4j
 @Service
@@ -46,36 +45,39 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
 
     @Override
     public void uploadAttachment(MultipartFile uploadFile) throws IOException {
-//        Assert.notNull(uploadFile, "Multipart file must not be null");
-//        // 获取当前年月
-//        int year = DateUtil.thisYear();
-//        int month = DateUtil.thisMonth() + 1;
-//        String monthString = month < 10 ? "0" + month : String.valueOf(month);
-//        // 构建文件目录
-//        String subDir = SystemConstants.UPLOAD_SUB_DIR + year + SystemConstants.FILE_SEPARATOR + monthString + SystemConstants.FILE_SEPARATOR;
-//        // 由于浏览器的不同，此处可能获取到携带盘符或者未携带盘符
-//        String originalFilename = uploadFile.getOriginalFilename();
-//        // 获取文件名
-//        String fileName = FilenameUtils.getFileName(originalFilename);
-//        // 获取文件扩展名
-//        String extension = FilenameUtils.getExtension(originalFilename);
-//        // 构建文件地址【更改文件名，以便可以上传同名文件】
-//        String subFilePath = StrUtil.concat(true, subDir, fileName, "-", IdUtil.simpleUUID(), ".", extension);
-//        // 上传文件
-//        File file = new File(subFilePath);
-//        uploadFile.transferTo(file);
-//        // 以图片读取文件
-//        InputStream uploadFileInputStream = new FileInputStream(file);
-//        BufferedImage bufferedImage = ImageIO.read(uploadFileInputStream);
-//        // 构建附件
-//        Attachment attachment = new Attachment();
-//        attachment.setAttachmentName(fileName);
-//        attachment.setPath(subFilePath);
-//        attachment.setMediaType(MediaType.valueOf(Objects.requireNonNull(uploadFile.getContentType())).toString());
-//        attachment.setSize(uploadFile.getSize());
-//        attachment.setHeight(bufferedImage.getHeight());
-//        attachment.setWidth(bufferedImage.getWidth());
-//        this.baseMapper.insert(attachment);
+        Assert.notNull(uploadFile, "Multipart file must not be null");
+        // 获取当前年月
+        int year = DateUtil.thisYear();
+        int month = DateUtil.thisMonth() + 1;
+        String monthString = month < 10 ? "0" + month : String.valueOf(month);
+        // 构建文件目录
+        String subDir = ChicConstants.UPLOAD_SUB_DIR + year + ChicConstants.FILE_SEPARATOR + monthString + ChicConstants.FILE_SEPARATOR;
+        // 由于浏览器的不同，此处可能获取到携带盘符或者未携带盘符
+        String originalFilename = uploadFile.getOriginalFilename();
+        // 获取文件名
+        String fileName = FilenameUtils.getFileName(originalFilename);
+        // 获取文件扩展名
+        String extension = FilenameUtils.getExtension(originalFilename);
+        // 构建文件地址【更改文件名，以便可以上传同名文件】
+        String subFilePath = StrUtil.concat(true, subDir, fileName, "-", IdUtil.simpleUUID(), ".", extension);
+        // 上传文件，如果父级文件夹目录不存在，则新建文件夹
+        File file = new File(ChicConstants.WORK_DIR + subFilePath);
+        if (! file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        uploadFile.transferTo(file);
+        // 以图片读取文件
+        InputStream uploadFileInputStream = new FileInputStream(file);
+        BufferedImage bufferedImage = ImageIO.read(uploadFileInputStream);
+        // 构建附件
+        Attachment attachment = new Attachment();
+        attachment.setAttachmentName(fileName);
+        attachment.setPath(subFilePath);
+        attachment.setMediaType(MediaType.valueOf(Objects.requireNonNull(uploadFile.getContentType())).toString());
+        attachment.setSize(uploadFile.getSize());
+        attachment.setHeight(bufferedImage.getHeight());
+        attachment.setWidth(bufferedImage.getWidth());
+        this.baseMapper.insert(attachment);
     }
 
     @Override
@@ -94,4 +96,4 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
         return PageConvertUtil.convert(attachmentPage, attachmentVOS);
     }
 }
-*/
+

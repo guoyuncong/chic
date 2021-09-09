@@ -1,4 +1,3 @@
-/*
 package com.chic.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
@@ -22,14 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-*/
 /**
  * 字典分类
  *
  * @author: yc
  * @date: 2021-07-02
- *//*
-
+ */
 @Service
 public class DictCategoryServiceImpl extends ServiceImpl<DictCategoryMapper, DictCategory> implements DictCategoryService {
 
@@ -81,13 +78,11 @@ public class DictCategoryServiceImpl extends ServiceImpl<DictCategoryMapper, Dic
         return PageConvertUtil.convert(dictCategoryPage, dictCategoryVOS);
     }
 
-    */
-/**
+    /**
      * 核验分类是否存在
      * 
      * @param dictCategoryId 主键ID
-     *//*
-
+     */
     private DictCategory checkDictCategoryExist(String dictCategoryId) {
         DictCategory dictCategory = this.baseMapper.selectById(dictCategoryId);
         if (dictCategory == null) {
@@ -96,14 +91,12 @@ public class DictCategoryServiceImpl extends ServiceImpl<DictCategoryMapper, Dic
         return dictCategory;
     }
 
-    */
-/**
+    /**
      * 核验分类编码是否存在
      *
      * @param dictCategoryId 分类ID
      * @param categoryCode   分类编码
-     *//*
-
+     */
     private void checkCategoryCodeExist(String dictCategoryId, String categoryCode) {
         LambdaQueryWrapper<DictCategory> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(DictCategory::getCategoryCode, categoryCode);
@@ -114,4 +107,3 @@ public class DictCategoryServiceImpl extends ServiceImpl<DictCategoryMapper, Dic
         }
     }
 }
-*/

@@ -1,3 +1,7 @@
+server:
+  port: 8010
+  servlet:
+    context-path: /post
 spring:
   application:
     name: @artifactId@

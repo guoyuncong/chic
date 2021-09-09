@@ -41,6 +41,11 @@ public class CategoryVO {
     private Integer sort;
 
     /**
+     * 封面图示
+     */
+    private String thumbnail;
+
+    /**
      * 描述
      */
     private String description;

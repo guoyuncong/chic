@@ -10,13 +10,4 @@ import java.io.File;
  */
 public class SystemConstants {
 
-    /**
-     * 上传文件文件夹
-     */
-    public final static String UPLOAD_SUB_DIR = "D://upload//";
-
-    /**
-     * Path separator.
-     */
-    public static final String FILE_SEPARATOR = File.separator;
 }

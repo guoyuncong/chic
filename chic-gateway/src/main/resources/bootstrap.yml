@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8888
 spring:
   application:
     name: @artifactId@
@@ -17,3 +17,19 @@ spring:
             dataId: application-common.yaml
             group: DEFAULT_GROUP
             refresh: true
+    gateway:
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+      routes:
+        # 文章相关
+        - id: chic-post
+          uri: lb://chic-post-biz
+          predicates:
+            - Path=/post/**
+        # 系统相关
+        - id: chic-system
+          uri: lb://chic-system-biz
+          predicates:
+            - Path=/system/**
