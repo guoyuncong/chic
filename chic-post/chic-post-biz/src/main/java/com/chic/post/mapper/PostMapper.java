@@ -21,10 +21,11 @@ public interface PostMapper extends BaseMapper<Post> {
     /**
      * 分页查询文章 IDS
      *
+     * @param page        分页查询参数
      * @param keyword     关键字
      * @param categoryIds 分类IDS
      * @param tagIds      标签IDS
-     * @return List<String>
+     * @return Page<String>
      */
     Page<String> selectPostIdByParam(Page page,
                                      @Param("keyword") String keyword,
@@ -32,11 +33,12 @@ public interface PostMapper extends BaseMapper<Post> {
                                      @Param("tagIds") List<String> tagIds);
 
     /**
-     * 分页查询文章列表
+     * 分页查询文章列表【只是简单的信息，并未包含复杂的信息】
      *
      * @param postIds 文章IDS
+     * @param status  状态
      * @return Page<PostVO>
      */
-    List<PostVO> selectPostByPostIds(@Param("postIds") List<String> postIds);
+    List<PostVO> selectPostSimpleByPostIds(@Param("postIds") List<String> postIds, @Param("status") Integer status);
 
 }

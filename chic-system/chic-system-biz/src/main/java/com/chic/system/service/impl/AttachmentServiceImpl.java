@@ -7,13 +7,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.chic.core.base.constants.ChicConstants;
+import com.chic.core.base.constants.CommonConstants;
+import com.chic.core.base.constants.SymbolConstants;
 import com.chic.core.util.FilenameUtils;
 import com.chic.mybatis.util.PageConvertUtil;
+import com.chic.system.enmus.AttachmentType;
 import com.chic.system.convert.AttachmentConvert;
 import com.chic.system.entity.Attachment;
 import com.chic.system.mapper.AttachmentMapper;
 import com.chic.system.service.AttachmentService;
+import com.chic.system.service.OptionService;
 import com.chic.system.vo.AttachmentVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +46,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachment> implements AttachmentService {
 
+    private final OptionService optionService;
+
     @Override
     public void uploadAttachment(MultipartFile uploadFile) throws IOException {
         Assert.notNull(uploadFile, "Multipart file must not be null");
@@ -51,7 +56,7 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
         int month = DateUtil.thisMonth() + 1;
         String monthString = month < 10 ? "0" + month : String.valueOf(month);
         // 构建文件目录
-        String subDir = ChicConstants.UPLOAD_SUB_DIR + year + ChicConstants.FILE_SEPARATOR + monthString + ChicConstants.FILE_SEPARATOR;
+        String subDir = CommonConstants.UPLOAD_SUB_DIR + year + CommonConstants.FILE_SEPARATOR + monthString + CommonConstants.FILE_SEPARATOR;
         // 由于浏览器的不同，此处可能获取到携带盘符或者未携带盘符
         String originalFilename = uploadFile.getOriginalFilename();
         // 获取文件名
@@ -61,7 +66,7 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
         // 构建文件地址【更改文件名，以便可以上传同名文件】
         String subFilePath = StrUtil.concat(true, subDir, fileName, "-", IdUtil.simpleUUID(), ".", extension);
         // 上传文件，如果父级文件夹目录不存在，则新建文件夹
-        File file = new File(ChicConstants.WORK_DIR + subFilePath);
+        File file = new File(CommonConstants.WORK_DIR + subFilePath);
         if (! file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
@@ -93,6 +98,15 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
         queryWrapper.like(StrUtil.isNotEmpty(keyword), Attachment::getAttachmentName, keyword);
         Page<Attachment> attachmentPage = this.baseMapper.selectPage(page, queryWrapper);
         List<AttachmentVO> attachmentVOS = AttachmentConvert.INSTANCE.convert2attachmentVOS(attachmentPage.getRecords());
+        // 如果附件类型为本地附件类型，需要拼接服务地址
+        String blogBaseUrl = optionService.getBlogBaseUrl();
+        attachmentVOS.forEach(attachmentVO -> {
+            // 本地服务器路径，需要拼接 BLOG_URL:PORT
+            if (Objects.equals(attachmentVO.getAttachmentType(), AttachmentType.LOCAL)) {
+                String path = StrUtil.concat(Boolean.TRUE, blogBaseUrl, SymbolConstants.LEFT_FORWARD_SLASH, attachmentVO.getPath());
+                attachmentVO.setPath(path);
+            }
+        });
         return PageConvertUtil.convert(attachmentPage, attachmentVOS);
     }
 }

@@ -11,7 +11,7 @@ import java.io.File;
  * @author: yc
  * @date: 2021-09-09
  */
-public class ChicConstants {
+public class CommonConstants {
 
     /**
      * 用户的主目录
@@ -27,7 +27,7 @@ public class ChicConstants {
 
     /**
      * 工作目录：
-     *      ❶ Windows：C:\Users\xxxx
+     *      ❶ Windows：C:\\Users\\username\\
      *      ❷ Linux: ~
      */
     public final static String WORK_DIR = ensureSuffix(USER_HOME, FILE_SEPARATOR) + ".halo" + FILE_SEPARATOR;

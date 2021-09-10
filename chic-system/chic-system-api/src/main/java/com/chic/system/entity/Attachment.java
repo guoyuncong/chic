@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.chic.mybatis.entity.Entity;
+import com.chic.system.enmus.AttachmentType;
 import lombok.Data;
 
 /**
@@ -30,7 +31,7 @@ public class Attachment extends Entity {
     /**
      * 附件分类
      */
-    private Integer type;
+    private AttachmentType attachmentType;
 
     /**
      * 文件类型

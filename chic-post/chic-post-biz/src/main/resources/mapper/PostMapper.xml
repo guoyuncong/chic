@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chic.post.mapper.PostMapper">
+
+    <sql id="BASE_COLUMN">
+        post.post_id,
+        post.title,
+        post.publish_time,
+        post.digest,
+        post.keywords,
+        post.status,
+        post.origin_content,
+        post.format_content,
+        post.cover,
+        post.top_flag,
+        post.comment_flag,
+        post.visit_num,
+        post.update_num,
+        post.version,
+        post.create_by,
+        post.create_time,
+        post.update_by,
+        post.update_time
+    </sql>
+
+    <sql id="SIMPLE_COLUMN">
+        post.post_id,
+        post.title,
+        post.publish_time,
+        post.digest,
+        post.keywords,
+        post.status,
+        post.thumbnail,
+        post.visit_num
+    </sql>
+
+    <select id="selectPostIdByParam" resultType="java.lang.String">
+        select post.post_id from post
+        inner join post_category as pc on post.post_id = pc.post_id
+        inner join post_tag as pt on post.post_id = pt.post_id
+        <where>
+            <if test="categoryIds != null and categoryIds.size() > 0">
+                and pc.category_id in
+                <foreach collection="categoryIds" index="index" open="(" close=")" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tagIds != null and tagIds.size() > 0">
+                and pt.tag_id in
+                <foreach collection="tagIds" index="index" open="(" close=")" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPostSimpleByPostIds" resultType="com.chic.post.vo.PostVO">
+        select <include refid="SIMPLE_COLUMN" />
+        from post
+        <where>
+            <if test="postIds != null and postIds.size() > 0">
+                and post.post_id in
+                <foreach collection="postIds" index="index" open="(" close=")" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="status != null">
+                and post.status = #{status}
+            </if>
+        </where>
+    </select>
+</mapper>

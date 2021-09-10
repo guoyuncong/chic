@@ -12,6 +12,7 @@ import com.chic.mybatis.util.PageConvertUtil;
 import com.chic.post.convert.PostConvert;
 import com.chic.post.entity.Post;
 import com.chic.post.enums.PostResultCode;
+import com.chic.post.enums.PostStatusEnum;
 import com.chic.post.mapper.PostMapper;
 import com.chic.post.param.PostEditParam;
 import com.chic.post.param.PostParam;
@@ -136,7 +137,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         if (CollUtil.isEmpty(postIds)) {
             return PageConvertUtil.convert(postIdsPage, Collections.EMPTY_LIST);
         } else {
-            List<PostVO> postVOS = this.baseMapper.selectPostByPostIds(postIds);
+            List<PostVO> postVOS = this.baseMapper.selectPostSimpleByPostIds(postIds, PostStatusEnum.PUBLISHED.getStatus());
             return PageConvertUtil.convert(postIdsPage, postVOS);
         }
     }

@@ -1,5 +1,6 @@
 package com.chic.system.vo;
 
+import com.chic.system.enmus.AttachmentType;
 import lombok.Data;
 
 /**
@@ -24,7 +25,7 @@ public class AttachmentVO {
     /**
      * 附件分类
      */
-    private Integer type;
+    private AttachmentType attachmentType;
 
     /**
      * 文件类型

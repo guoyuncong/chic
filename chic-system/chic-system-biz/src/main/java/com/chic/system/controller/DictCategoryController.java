@@ -1,4 +1,3 @@
-/*
 package com.chic.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,13 +12,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-*/
+
 /**
  * 字典分类
  *
  * @author: yc
  * @date: 2021-07-02
- *//*
+ */
 
 @Validated
 @RestController
@@ -29,13 +28,12 @@ public class DictCategoryController {
 
     private final DictCategoryService dictCategoryService;
 
-    */
-/**
+    /**
      * 新增字典分类
      *
      * @param dictCategoryParam 文章请求参数
      * @return postId
-     *//*
+     */
 
     @PostMapping("save")
     public R saveDictCategory(@RequestBody @Validated(CreateCheck.class) DictCategoryParam dictCategoryParam) {
@@ -43,13 +41,13 @@ public class DictCategoryController {
         return R.ofSuccess(dictCategoryId);
     }
 
-    */
-/**
+
+    /**
      * 新增字典分类
      *
      * @param dictCategoryParam 文章请求参数
      * @return void
-     *//*
+     */
 
     @PostMapping("update")
     public R updateDictCategory(@RequestBody @Validated(UpdateCheck.class) DictCategoryParam dictCategoryParam) {
@@ -57,13 +55,12 @@ public class DictCategoryController {
         return R.ofSuccess();
     }
 
-    */
-/**
+    /**
      * 删除字典分类
      *
      * @param dictCategoryParam 文章请求参数
      * @return void
-     *//*
+     */
 
     @PostMapping("delete")
     public R deleteDictCategory(@RequestBody @Validated(DeleteCheck.class) DictCategoryParam dictCategoryParam) {
@@ -71,14 +68,13 @@ public class DictCategoryController {
         return R.ofSuccess();
     }
 
-    */
-/**
+    /**
      * 字典分类列表——分页
      *
-     * @param page  分页参数
+     * @param page    分页参数
      * @param keyword 关键字
      * @return Page<DictCategoryVO>
-     *//*
+     */
 
     @GetMapping("page")
     public R pageDictCategory(Page page, String keyword) {
@@ -86,4 +82,4 @@ public class DictCategoryController {
         return R.ofSuccess(dictCategoryVOPage);
     }
 }
-*/
+
