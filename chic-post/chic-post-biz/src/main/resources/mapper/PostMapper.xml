@@ -37,22 +37,27 @@
 
     <select id="selectPostIdByParam" resultType="java.lang.String">
         select post.post_id from post
-        inner join post_category as pc on post.post_id = pc.post_id
-        inner join post_tag as pt on post.post_id = pt.post_id
         <where>
             <if test="categoryIds != null and categoryIds.size() > 0">
-                and pc.category_id in
-                <foreach collection="categoryIds" index="index" open="(" close=")" item="item" separator=",">
-                    #{item}
-                </foreach>
+                and exists (
+                    select 1 from post_category where post_id = post.post_id
+                    and category_id in
+                    <foreach collection="categoryIds" index="index" open="(" close=")" item="item" separator=",">
+                        #{item}
+                    </foreach>
+                )
             </if>
             <if test="tagIds != null and tagIds.size() > 0">
-                and pt.tag_id in
-                <foreach collection="tagIds" index="index" open="(" close=")" item="item" separator=",">
-                    #{item}
-                </foreach>
+                and exist (
+                    select 1 from post_tag as pt where pt.post_id = post.post_id
+                    and pt.tag_id in
+                    <foreach collection="tagIds" index="index" open="(" close=")" item="item" separator=",">
+                        #{item}
+                    </foreach>
+                )
             </if>
         </where>
+        order by post.create_time desc
     </select>
 
     <select id="selectPostSimpleByPostIds" resultType="com.chic.post.vo.PostVO">

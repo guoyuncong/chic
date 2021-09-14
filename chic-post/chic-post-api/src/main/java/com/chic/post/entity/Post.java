@@ -67,7 +67,7 @@ public class Post extends Entity {
     /**
      * 封面
      */
-    private String cover;
+    private String thumbnail;
 
     /**
      * 是否置顶

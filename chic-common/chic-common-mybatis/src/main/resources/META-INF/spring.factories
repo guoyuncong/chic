@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.chic.core.handle.GlobalExceptionHandler
+  com.chic.mybatis.MyBatisAutoConfiguration

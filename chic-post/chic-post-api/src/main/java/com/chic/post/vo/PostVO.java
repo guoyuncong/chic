@@ -55,7 +55,7 @@ public class PostVO {
     /**
      * 封面
      */
-    private String cover;
+    private String thumbnail;
 
     /**
      * 是否置顶
@@ -76,11 +76,6 @@ public class PostVO {
      * 修改次数
      */
     private Integer updateNum;
-
-    /**
-     * 原始内容
-     */
-    private String originContent;
 
     /**
      * 格式化后内容
