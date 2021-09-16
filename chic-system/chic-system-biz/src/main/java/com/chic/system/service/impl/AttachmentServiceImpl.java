@@ -9,12 +9,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chic.core.base.constants.CommonConstants;
 import com.chic.core.base.constants.SymbolConstants;
+import com.chic.core.exception.BizException;
+import com.chic.core.exception.BizResponse;
 import com.chic.core.util.FilenameUtils;
 import com.chic.mybatis.util.PageConvertUtil;
+import com.chic.system.base.enums.SysResultCode;
 import com.chic.system.enmus.AttachmentType;
 import com.chic.system.convert.AttachmentConvert;
 import com.chic.system.entity.Attachment;
 import com.chic.system.mapper.AttachmentMapper;
+import com.chic.system.param.AttachmentParam;
 import com.chic.system.service.AttachmentService;
 import com.chic.system.service.OptionService;
 import com.chic.system.vo.AttachmentVO;
@@ -78,12 +82,29 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
         // 构建附件
         Attachment attachment = new Attachment();
         attachment.setAttachmentName(fileName);
+        attachment.setAttachmentType(AttachmentType.LOCAL);
         attachment.setPath(subFilePath);
         attachment.setMediaType(MediaType.valueOf(Objects.requireNonNull(uploadFile.getContentType())).toString());
         attachment.setSize(uploadFile.getSize());
         attachment.setHeight(bufferedImage.getHeight());
         attachment.setWidth(bufferedImage.getWidth());
         this.baseMapper.insert(attachment);
+    }
+
+    @Override
+    public void deleteAttachment(AttachmentParam attachmentParam) {
+        // 核验附件是否存在
+        String attachmentId = attachmentParam.getAttachmentId();
+        Attachment attachment = checkAttachmentExist(attachmentId);
+        // 获取附件地址，并删除附件
+        String path = StrUtil.concat(true, CommonConstants.WORK_DIR, attachment.getPath());
+        log.info("删除附件[{}]", path);
+        File file = new File(path);
+        if (file.exists()) {
+            log.info("删除附件[{}]成功", path);
+        }
+        // 数据库删除
+        this.baseMapper.deleteById(attachmentId);
     }
 
     @Override
@@ -109,6 +130,20 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
             }
         });
         return PageConvertUtil.convert(attachmentPage, attachmentVOS);
+    }
+
+    /**
+     * 核验附件是否存在
+     *
+     * @param attachmentId 附件ID
+     * @return Attachment
+     */
+    private Attachment checkAttachmentExist(String attachmentId) {
+        Attachment attachment = this.baseMapper.selectById(attachmentId);
+        if (attachment == null) {
+            throw BizException.of(SysResultCode.ATTACHMENT_NOT_EXIST);
+        }
+        return attachment;
     }
 }
 

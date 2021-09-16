@@ -3,6 +3,7 @@ package com.chic.system.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chic.system.entity.Attachment;
+import com.chic.system.param.AttachmentParam;
 import com.chic.system.vo.AttachmentVO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,9 +23,14 @@ public interface AttachmentService extends IService<Attachment> {
      *
      * @param uploadFile 文件
      */
-
     void uploadAttachment(MultipartFile uploadFile) throws IOException;
 
+    /**
+     * 删除附件
+     *
+     * @param attachmentParam 请求参数
+     */
+    void deleteAttachment(AttachmentParam attachmentParam);
 
     /**
      * 文件详情
@@ -33,7 +39,6 @@ public interface AttachmentService extends IService<Attachment> {
      * @return AttachmentVO
      */
     AttachmentVO detailAttachment(String attachmentId);
-
 
     /**
      * 文件分页查询

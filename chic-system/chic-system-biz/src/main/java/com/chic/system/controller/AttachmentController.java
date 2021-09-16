@@ -2,6 +2,9 @@ package com.chic.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chic.core.base.model.vo.R;
+import com.chic.core.group.CreateCheck;
+import com.chic.core.group.DeleteCheck;
+import com.chic.system.param.AttachmentParam;
 import com.chic.system.service.AttachmentService;
 import com.chic.system.vo.AttachmentVO;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +31,6 @@ public class AttachmentController {
 
     private final AttachmentService attachmentService;
 
-
     /**
      * 上传文件
      *
@@ -40,6 +42,19 @@ public class AttachmentController {
     @PostMapping("upload")
     public R uploadAttachment(@RequestParam("file") MultipartFile uploadFile) throws IOException {
         attachmentService.uploadAttachment(uploadFile);
+        return R.ofSuccess();
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param attachmentParam 请求参数
+     * @return void
+     */
+
+    @PostMapping("delete")
+    public R deleteAttachment(@RequestBody @Validated(DeleteCheck.class) AttachmentParam attachmentParam) {
+        attachmentService.deleteAttachment(attachmentParam);
         return R.ofSuccess();
     }
 
