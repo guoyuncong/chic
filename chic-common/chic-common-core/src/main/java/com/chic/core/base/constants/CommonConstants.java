@@ -30,7 +30,7 @@ public class CommonConstants {
      *      ❶ Windows：C:\\Users\\username\\
      *      ❷ Linux: ~
      */
-    public final static String WORK_DIR = ensureSuffix(USER_HOME, FILE_SEPARATOR) + ".halo" + FILE_SEPARATOR;
+    public final static String WORK_DIR = ensureSuffix(USER_HOME, FILE_SEPARATOR) + ".chic" + FILE_SEPARATOR;
 
     /**
      * 上传文件文件夹
