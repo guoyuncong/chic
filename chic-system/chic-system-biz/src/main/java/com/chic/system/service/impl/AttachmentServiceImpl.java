@@ -67,6 +67,7 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
         String subFilePath = StrUtil.concat(true, subDir, fileName, "-", IdUtil.simpleUUID(), ".", extension);
         // 上传文件，如果父级文件夹目录不存在，则新建文件夹
         File file = new File(CommonConstants.WORK_DIR + subFilePath);
+        log.info("上传文件至：{}", CommonConstants.WORK_DIR + subFilePath);
         if (! file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
