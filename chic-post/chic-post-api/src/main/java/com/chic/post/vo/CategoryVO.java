@@ -1,5 +1,6 @@
 package com.chic.post.vo;
 
+import cn.hutool.core.collection.CollUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -60,4 +61,16 @@ public class CategoryVO {
      * 子级
      */
     private List<CategoryVO> child;
+
+    /**
+     * 如果没有子集，返回 null，便于前端使用级联选择器
+     *
+     * @return List<CategoryVO>
+     */
+    public List<CategoryVO> getChild() {
+        if (CollUtil.isEmpty(child)) {
+            return null;
+        }
+        return child;
+    }
 }

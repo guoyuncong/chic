@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="10 seconds">
     <contextName>logback-spring</contextName>
-    <property name="logging.path" value="/data/log/chic/chic-post/"/>
+    <!-- 项目名称 -->
+    <springProperty scope="context" name="project.name" source="spring.application.name" />
+    <!-- 日志路径 -->
+    <springProperty scope="context" name="logging.path" source="logging.path" />
 
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
     <conversionRule conversionWord="wex"
@@ -29,7 +32,7 @@
     <!-- 2.1 level为 DEBUG 日志，时间滚动输出  -->
     <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 正在记录的日志文档的路径及文档名 -->
-        <file>${logging.path}/debug.log</file>
+        <file>${logging.path}/${project.name}/debug.log</file>
         <!--日志文档输出格式-->
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
@@ -56,7 +59,7 @@
     <!-- 2.2 level为 INFO 日志，时间滚动输出  -->
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 正在记录的日志文档的路径及文档名 -->
-        <file>${logging.path}/info.log</file>
+        <file>${logging.path}/${project.name}/info.log</file>
         <!--日志文档输出格式-->
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
@@ -65,7 +68,7 @@
         <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 每天日志归档路径以及格式 -->
-            <fileNamePattern>${logging.path}/info/info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${logging.path}/${project.name}/info/info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>30MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -83,7 +86,7 @@
     <!-- 2.3 level为 WARN 日志，时间滚动输出  -->
     <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 正在记录的日志文档的路径及文档名 -->
-        <file>${logging.path}/warn.log</file>
+        <file>${logging.path}/${project.name}/warn.log</file>
         <!--日志文档输出格式-->
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
@@ -91,7 +94,7 @@
         </encoder>
         <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logging.path}/warn/warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${logging.path}/${project.name}/warn/warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>30MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -109,7 +112,7 @@
     <!-- 2.4 level为 ERROR 日志，时间滚动输出  -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 正在记录的日志文档的路径及文档名 -->
-        <file>${logging.path}/error.log</file>
+        <file>${logging.path}/${project.name}/error.log</file>
         <!--日志文档输出格式-->
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
@@ -117,7 +120,7 @@
         </encoder>
         <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logging.path}/error/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${logging.path}/${project.name}/error/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>30MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -159,12 +162,6 @@
         可以包含零个或多个元素，标识这个appender将会添加到这个logger。
     -->
 
-    <!-- 4. 最终的策略 -->
-    <!-- 4.1 开发环境:打印控制台-->
-    <springProfile name="dev">
-        <logger name="com.yagena.navigation" level="debug"/><!-- 修改此处扫描包名 -->
-    </springProfile>
-
     <root level="info">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="DEBUG_FILE"/>
@@ -173,14 +170,4 @@
         <appender-ref ref="ERROR_FILE"/>
     </root>
 
-    <!--     4.2 生产环境:输出到文档-->
-    <springProfile name="pro">
-        <root level="info">
-            <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="DEBUG_FILE"/>
-            <appender-ref ref="INFO_FILE"/>
-            <appender-ref ref="ERROR_FILE"/>
-            <appender-ref ref="WARN_FILE"/>
-        </root>
-    </springProfile>
 </configuration>
