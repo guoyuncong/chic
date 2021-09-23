@@ -2,6 +2,7 @@ package com.chic.mybatis.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -39,4 +40,10 @@ public class Entity {
      */
     @TableField(value = "update_time", fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
+
+    /**
+     * 是否删除：0-未删除，1-已删除
+     */
+    @TableLogic(value = "false", delval = "true")
+    private Boolean deleteFlag;
 }

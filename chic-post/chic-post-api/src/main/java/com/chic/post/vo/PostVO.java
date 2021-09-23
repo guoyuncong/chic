@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 文章
+ * 文章详情-含有分类和标签
  *
  * @author: yc
- * @date: 2021-07-01
+ * @date: 2021-09-23
  */
 @Data
 public class PostVO {
@@ -30,6 +30,11 @@ public class PostVO {
      * 别名
      */
     private String abbr;
+
+    /**
+     * 封面
+     */
+    private String thumbnail;
 
     /**
      * 发布时间
@@ -53,9 +58,14 @@ public class PostVO {
     private Integer status;
 
     /**
-     * 封面
+     * 原始内容(markdown)
      */
-    private String thumbnail;
+    private String originContent;
+
+    /**
+     * 格式化后内容(html)
+     */
+    private String formatContent;
 
     /**
      * 是否置顶
@@ -78,30 +88,18 @@ public class PostVO {
     private Integer updateNum;
 
     /**
-     * 格式化后内容
-     */
-    private String formatContent;
-
-    /**
-     * 分类
-     */
-    private List<CategoryVO> categories;
-
-    /**
-     * 标签
-     */
-    private List<TagVO> tags;
-
-    /**
      * 状态翻译
      */
     private String statusTrans;
 
-    public String getStatusTrans() {
-        if (status != null) {
-            PostStatusEnum postStatusEnum = PostStatusEnum.of(status);
-            return postStatusEnum == null ? null : postStatusEnum.getTrans();
-        }
-        return statusTrans;
-    }
+    /**
+     * 分类列表
+     */
+    private List<CategoryVO> categories;
+
+    /**
+     * 标签列表
+     */
+    private List<TagVO> tags;
+
 }

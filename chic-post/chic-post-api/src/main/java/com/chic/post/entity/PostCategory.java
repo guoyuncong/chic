@@ -13,7 +13,7 @@ import lombok.Data;
  */
 @Data
 @TableName("post_category")
-public class PostCategory extends Entity {
+public class PostCategory {
 
     /**
      * 主键ID

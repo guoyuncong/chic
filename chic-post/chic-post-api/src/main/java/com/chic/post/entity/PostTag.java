@@ -14,7 +14,7 @@ import lombok.Data;
  */
 @Data
 @TableName("post_tag")
-public class PostTag extends Entity {
+public class PostTag {
 
     /**
      * 主键ID
