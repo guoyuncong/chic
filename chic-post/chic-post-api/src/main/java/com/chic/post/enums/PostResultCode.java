@@ -31,6 +31,7 @@ public enum PostResultCode implements BizResponse {
     POST_ABBR_EXIST("103000", "文章别名已存在"),
     POST_TAG_NOT_MATCH("103001", "文章标签不匹配"),
     POST_CATEGORY_NOT_MATCH("103002", "文章分类不匹配"),
+    POST_NOT_PUBLISHED("103003", "非已发布文章不允许访问"),
 
     ;
     private String code;

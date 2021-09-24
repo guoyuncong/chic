@@ -116,11 +116,15 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     @Override
     public PostVO clientDetailPost(String abbr) {
         Post post = checkPostExist(null, abbr);
+        // 非已发布文章不允许访问详情
+        if (! PostStatusEnum.PUBLISHED.getStatus().equals(post.getStatus())) {
+            throw BizException.of(PostResultCode.POST_NOT_PUBLISHED);
+        }
         PostVO postVO = PostConvert.INSTANCE.convert2postVO(post);
         // 查找标签
         List<TagVO> tagVOS = postTagService.query4postTag(post.getPostId());
         postVO.setTags(tagVOS);
-        // 前端使用不反回原始内容
+        // 前端使用不返回原始内容
         postVO.setOriginContent(null);
         // 每一次访问，访问次数+1
         post.setVisitNum(post.getVisitNum() + 1);
