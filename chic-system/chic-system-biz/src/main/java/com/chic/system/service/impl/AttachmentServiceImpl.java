@@ -118,6 +118,7 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
         LambdaQueryWrapper<Attachment> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(StrUtil.isNotEmpty(mediaType), Attachment::getMediaType, mediaType);
         queryWrapper.like(StrUtil.isNotEmpty(keyword), Attachment::getAttachmentName, keyword);
+        queryWrapper.orderByDesc(Attachment::getCreateTime);
         Page<Attachment> attachmentPage = this.baseMapper.selectPage(page, queryWrapper);
         List<AttachmentVO> attachmentVOS = AttachmentConvert.INSTANCE.convert2attachmentVOS(attachmentPage.getRecords());
         // 如果附件类型为本地附件类型，需要拼接服务地址

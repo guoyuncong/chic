@@ -8,6 +8,7 @@
         <result column="title" property="title" />
         <result column="status" property="status" />
         <result column="abbr" property="abbr" />
+        <result column="digest" property="digest" />
         <result column="publish_time" property="publishTime" />
         <result column="visit_num" property="visitNum" />
         <result column="update_num" property="updateNum" />
@@ -79,9 +80,11 @@
             post.post_id,
             post.title,
             post.abbr,
+            post.digest,
             post.publish_time,
             post.status,
             post.visit_num,
+            post.update_num,
             category.category_id,
             category.category_name,
             tag.tag_id,
