@@ -22,15 +22,9 @@ import java.util.Set;
 public class PostParam {
 
     /**
-     * 主键IDS
-     */
-    @NotBlank(message = "请选择文章", groups = DeleteCheck.class)
-    private List<String> postIds;
-
-    /**
      * 主键ID
      */
-    @NotBlank(message = "请选择文章", groups = UpdateCheck.class)
+    @NotBlank(message = "请选择文章", groups = {UpdateCheck.class, DeleteCheck.class})
     private String postId;
 
     /**

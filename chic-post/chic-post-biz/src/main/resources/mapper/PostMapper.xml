@@ -3,6 +3,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chic.post.mapper.PostMapper">
 
+    <resultMap id="pagePost" type="com.chic.post.vo.PostVO">
+        <id column="post_id" property="postId" />
+        <result column="title" property="title" />
+        <result column="status" property="status" />
+        <result column="abbr" property="abbr" />
+        <result column="publish_time" property="publishTime" />
+        <result column="visit_num" property="visitNum" />
+        <result column="update_num" property="updateNum" />
+        <collection property="categories" ofType="com.chic.post.vo.CategoryVO">
+            <id column="category_id" property="categoryId" />
+            <result column="category_name" property="categoryName" />
+        </collection>
+        <collection property="tags" ofType="com.chic.post.vo.TagVO">
+            <id column="tag_id" property="tagId" />
+            <result column="tag_name" property="tagName" />
+        </collection>
+    </resultMap>
+
     <sql id="BASE_COLUMN">
         post.post_id,
         post.title,
@@ -24,20 +42,16 @@
         post.update_time
     </sql>
 
-    <sql id="SIMPLE_COLUMN">
-        post.post_id,
-        post.title,
-        post.publish_time,
-        post.digest,
-        post.keywords,
-        post.status,
-        post.thumbnail,
-        post.visit_num
-    </sql>
-
     <select id="selectPostIdByParam" resultType="java.lang.String">
         select post.post_id from post
         <where>
+            delete_flag = 0
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and keywords like concat('%', #{keyword}, '%')
+            </if>
             <if test="categoryIds != null and categoryIds.size() > 0">
                 and exists (
                     select 1 from post_category where post_id = post.post_id
@@ -60,18 +74,30 @@
         order by post.create_time desc
     </select>
 
-    <select id="selectPostSimpleByPostIds" resultType="com.chic.post.vo.PostVO">
-        select <include refid="SIMPLE_COLUMN" />
+    <select id="selectPostSimpleByPostIds" resultMap="pagePost">
+        select
+            post.post_id,
+            post.title,
+            post.abbr,
+            post.publish_time,
+            post.status,
+            post.visit_num,
+            category.category_id,
+            category.category_name,
+            tag.tag_id,
+            tag.tag_name
         from post
+        left join post_category as pc on pc.post_id = post.post_id
+        left join category on category.category_id = pc.category_id
+        left join post_tag as pt on pt.post_id = post.post_id
+        left join tag on tag.tag_id = pt.tag_id
         <where>
+            post.delete_flag = 0
             <if test="postIds != null and postIds.size() > 0">
                 and post.post_id in
                 <foreach collection="postIds" index="index" open="(" close=")" item="item" separator=",">
                     #{item}
                 </foreach>
-            </if>
-            <if test="status != null">
-                and post.status = #{status}
             </if>
         </where>
     </select>

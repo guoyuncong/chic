@@ -58,9 +58,9 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
     }
 
     @Override
-    public List<CategoryVO> query4postCategory(List<String> postIds) {
+    public List<CategoryVO> query4postCategory(String postId) {
         LambdaQueryWrapper<PostCategory> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.in(PostCategory::getPostId, postIds);
+        queryWrapper.eq(PostCategory::getPostId, postId);
         List<PostCategory> postCategories = this.baseMapper.selectList(queryWrapper);
         List<String> categoryIds = postCategories.stream().map(PostCategory::getCategoryId).collect(Collectors.toList());
         return CollUtil.isEmpty(categoryIds) ? Collections.EMPTY_LIST : categoryService.listCategory(null, categoryIds);

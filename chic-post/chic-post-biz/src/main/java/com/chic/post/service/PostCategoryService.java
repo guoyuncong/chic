@@ -32,10 +32,10 @@ public interface PostCategoryService extends IService<PostCategory> {
     void deletePostCategory(String postId, String categoryId);
 
     /**
-     * 根据 postIds 获取文章分类
+     * 根据 postId 获取文章分类
      *
-     * @param postIds 文章IDS
+     * @param postId 文章ID
      * @return List<CategoryVO>
      */
-    List<CategoryVO> query4postCategory(List<String> postIds);
+    List<CategoryVO> query4postCategory(String postId);
 }

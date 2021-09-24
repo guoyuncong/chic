@@ -74,7 +74,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     @Override
     public void setPost(PostParam postParam) {
-        Post oldPost = checkPostExist(postParam.getPostId());
+        Post oldPost = checkPostExist(postParam.getPostId(), null);
         Post post = PostConvert.INSTANCE.convert2post(postParam, oldPost);
         // 核验标签是否匹配
         Set<String> tagIds = postParam.getTagIds();
@@ -90,40 +90,56 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     @Override
     public void deletePost(PostParam postParam) {
-        LambdaQueryWrapper<Post> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.in(Post::getPostId, postParam.getPostIds());
-
+        String postId = postParam.getPostId();
+        checkPostExist(postId, null);
+        // 删除文章，逻辑删除
+        this.baseMapper.deleteById(postId);
+        // 删除文章分类，关联表-物理删除
+        postCategoryService.deletePostCategory(postId, null);
+        // 删除文章标签，关联表-物理删除
+        postTagService.deletePostTag(postId, null);
     }
 
     @Override
-    public PostVO detailPost(String abbr, String postId) {
-        LambdaQueryWrapper<Post> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(StrUtil.isNotEmpty(abbr), Post::getAbbr, abbr);
-        queryWrapper.eq(StrUtil.isNotEmpty(postId), Post::getPostId, postId);
-        Post post = this.baseMapper.selectOne(queryWrapper);
-        if (post == null) {
-            throw BizException.of(ResultCode.BIZ_DATA_NOT_EXIST);
-        }
+    public PostVO detailPost(String postId) {
+        Post post = checkPostExist(postId, null);
         PostVO postVO = PostConvert.INSTANCE.convert2postVO(post);
         // 查询分类
-        List<CategoryVO> categories = postCategoryService.query4postCategory(Arrays.asList(post.getPostId()));
+        List<CategoryVO> categories = postCategoryService.query4postCategory(post.getPostId());
         postVO.setCategories(categories);
         // 查找标签
-        List<TagVO> tagVOS = postTagService.query4postTag(Arrays.asList(post.getPostId()));
+        List<TagVO> tagVOS = postTagService.query4postTag(post.getPostId());
         postVO.setTags(tagVOS);
         return postVO;
     }
 
     @Override
+    public PostVO clientDetailPost(String abbr) {
+        Post post = checkPostExist(null, abbr);
+        PostVO postVO = PostConvert.INSTANCE.convert2postVO(post);
+        // 查找标签
+        List<TagVO> tagVOS = postTagService.query4postTag(post.getPostId());
+        postVO.setTags(tagVOS);
+        // 前端使用不反回原始内容
+        postVO.setOriginContent(null);
+        // 每一次访问，访问次数+1
+        post.setVisitNum(post.getVisitNum() + 1);
+        this.baseMapper.updateById(post);
+        return postVO;
+    }
+
+    @Override
     public void editPost(PostEditParam postEditParam) {
-        Post post = checkPostExist(postEditParam.getPostId());
+        Post post = checkPostExist(postEditParam.getPostId(), null);
         post.setOriginContent(postEditParam.getOriginContent());
         post.setFormatContent(postEditParam.getFormatContent());
+        post.setUpdateNum(post.getUpdateNum() + 1);
+        post.setStatus(postEditParam.getStatus());
         this.baseMapper.updateById(post);
     }
 
     @Override
-    public Page<PostVO> pagePost(Page page, String keyword, String categoryId, String tagId) {
+    public Page<PostVO> pagePost(Page page, String keyword, Integer status, String categoryId, String tagId) {
         List<String> categoryIds = null;
         if (StrUtil.isNotEmpty(categoryId)) {
             categoryIds = Arrays.asList(categoryId.split(","));
@@ -132,19 +148,19 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         if (StrUtil.isNotEmpty(tagId)) {
             tagIds = Arrays.asList(tagId.split(","));
         }
-        Page<String> postIdsPage = this.baseMapper.selectPostIdByParam(page, keyword, categoryIds, tagIds);
+        Page<String> postIdsPage = this.baseMapper.selectPostIdByParam(page, keyword, status, categoryIds, tagIds);
         List<String> postIds = postIdsPage.getRecords();
         if (CollUtil.isEmpty(postIds)) {
             return PageConvertUtil.convert(postIdsPage, Collections.EMPTY_LIST);
         } else {
-            List<PostVO> postVOS = this.baseMapper.selectPostSimpleByPostIds(postIds, PostStatusEnum.PUBLISHED.getStatus());
+            List<PostVO> postVOS = this.baseMapper.selectPostSimpleByPostIds(postIds);
             return PageConvertUtil.convert(postIdsPage, postVOS);
         }
     }
 
     @Override
     public void updateStatus(PostUpdateStatusParam param) {
-        Post post = checkPostExist(param.getPostId());
+        Post post = checkPostExist(param.getPostId(), null);
         post.setStatus(param.getStatus());
         this.baseMapper.updateById(post);
     }
@@ -154,8 +170,11 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
      *
      * @param postId 主键ID
      */
-    private Post checkPostExist(String postId) {
-        Post post = this.baseMapper.selectById(postId);
+    private Post checkPostExist(String postId, String abbr) {
+        LambdaQueryWrapper<Post> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(StrUtil.isNotEmpty(postId), Post::getPostId, postId);
+        queryWrapper.eq(StrUtil.isNotEmpty(abbr), Post::getAbbr, abbr);
+        Post post = this.baseMapper.selectOne(queryWrapper);
         if (post == null) {
             throw BizException.of(ResultCode.BIZ_DATA_NOT_EXIST);
         }

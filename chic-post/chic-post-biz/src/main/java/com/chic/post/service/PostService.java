@@ -41,11 +41,18 @@ public interface PostService extends IService<Post> {
     /**
      * 文章详情
      *
-     * @param abbr   文章简称
      * @param postId 文章ID
      * @return PostVO
      */
-    PostVO detailPost(String abbr, String postId);
+    PostVO detailPost(String postId);
+
+    /**
+     * 文章详情【客户端访问】
+     *
+     * @param abbr 文章别名
+     * @return PostVO
+     */
+    PostVO clientDetailPost(String abbr);
 
     /**
      * 编辑文章
@@ -59,11 +66,12 @@ public interface PostService extends IService<Post> {
      *
      * @param page        分页参数
      * @param keyword     关键字
+     * @param status      文章状态
      * @param categoryIds 分类IDS
      * @param tagIds      标签IDS
      * @return Page<PostVO>
      */
-    Page<PostVO> pagePost(Page page, String keyword, String categoryIds, String tagIds);
+    Page<PostVO> pagePost(Page page, String keyword, Integer status, String categoryIds, String tagIds);
 
     /**
      * 更改状态
@@ -71,4 +79,6 @@ public interface PostService extends IService<Post> {
      * @param param 请求参数
      */
     void updateStatus(PostUpdateStatusParam param);
+
+
 }

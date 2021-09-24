@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 文章
  *
@@ -55,7 +57,7 @@ public class PostController {
     }
 
     /**
-     * 编辑文章
+     * 编辑文章内容
      *
      * @param postEditParam 文章请求参数
      * @return void
@@ -78,7 +80,6 @@ public class PostController {
         return R.ofSuccess();
     }
 
-
     /**
      * 删除文章
      *
@@ -94,31 +95,44 @@ public class PostController {
     /**
      * 文章详情
      *
-     * @param abbr   文章简称
      * @param postId 文章ID
      * @return PostVO
      */
     @GetMapping("detail")
-    public R detailPost(String abbr, String postId) {
-        PostVO postVO = postService.detailPost(abbr, postId);
+    public R detailPost(String postId) {
+        PostVO postVO = postService.detailPost(postId);
+        return R.ofSuccess(postVO);
+    }
+
+    /**
+     * 文章详情【客户端访问】
+     *
+     * @param abbr 文章别名
+     * @return PostVO
+     */
+    @GetMapping("client/detail")
+    public R clientDetailPost(@NotBlank String abbr) {
+        PostVO postVO = postService.clientDetailPost(abbr);
         return R.ofSuccess(postVO);
     }
 
     /**
      * 文章列表——分页
      *
-     * @param page       分页参数
-     * @param keyword    关键字
+     * @param page        分页参数
+     * @param status      文章状态
+     * @param keyword     关键字
      * @param categoryIds 分类ID
      * @param categoryIds 分类ID
      * @return Page<PostVO>
      */
     @GetMapping("page")
     public R pagePost(Page page,
+                      Integer status,
                       String keyword,
                       String categoryIds,
                       String tagIds) {
-        Page<PostVO> postVOPage = postService.pagePost(page, keyword, categoryIds, tagIds);
+        Page<PostVO> postVOPage = postService.pagePost(page, keyword, status, categoryIds, tagIds);
         return R.ofSuccess(postVOPage);
     }
 }

@@ -58,9 +58,9 @@ public class PostTagServiceImpl extends ServiceImpl<PostTagMapper, PostTag> impl
     }
 
     @Override
-    public List<TagVO> query4postTag(List<String> postIds) {
+    public List<TagVO> query4postTag(String postId) {
         LambdaQueryWrapper<PostTag> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.in(CollUtil.isNotEmpty(postIds), PostTag::getPostId, postIds);
+        queryWrapper.eq(PostTag::getPostId, postId);
         List<PostTag> postTags = this.baseMapper.selectList(queryWrapper);
         List<String> tagIds = postTags.stream().map(PostTag::getTagId).distinct().collect(Collectors.toList());
         return CollUtil.isEmpty(tagIds) ? Collections.EMPTY_LIST : tagService.listTag(null, tagIds);

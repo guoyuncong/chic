@@ -102,4 +102,13 @@ public class PostVO {
      */
     private List<TagVO> tags;
 
+    /**
+     * 文章状态翻译
+     *
+     * @return
+     */
+    public String getStatusTrans() {
+        PostStatusEnum postStatusEnum = PostStatusEnum.of(status);
+        return postStatusEnum == null ? null : postStatusEnum.getTrans();
+    }
 }

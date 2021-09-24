@@ -34,8 +34,8 @@ public interface PostTagService extends IService<PostTag> {
     /**
      * 查找文章标签
      *
-     * @param postIds 文章IDS
+     * @param postId 文章ID
      * @return List<TagVO>
      */
-    List<TagVO> query4postTag(List<String> postIds);
+    List<TagVO> query4postTag(String postId);
 }
