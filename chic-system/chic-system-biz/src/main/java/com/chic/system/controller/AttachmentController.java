@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chic.core.base.model.vo.R;
 import com.chic.core.group.CreateCheck;
 import com.chic.core.group.DeleteCheck;
+import com.chic.core.group.UpdateCheck;
 import com.chic.system.param.AttachmentParam;
 import com.chic.system.service.AttachmentService;
 import com.chic.system.vo.AttachmentVO;
@@ -32,7 +33,7 @@ public class AttachmentController {
     private final AttachmentService attachmentService;
 
     /**
-     * 上传文件
+     * 上传附件
      *
      * @param uploadFile 文件
      * @return void
@@ -46,12 +47,23 @@ public class AttachmentController {
     }
 
     /**
-     * 删除文件
+     * 更新附件
      *
      * @param attachmentParam 请求参数
      * @return void
      */
+    @PostMapping("update")
+    public R updateAttachment(@RequestBody @Validated(UpdateCheck.class) AttachmentParam attachmentParam) {
+        attachmentService.updateAttachment(attachmentParam);
+        return R.ofSuccess();
+    }
 
+    /**
+     * 删除附件
+     *
+     * @param attachmentParam 请求参数
+     * @return void
+     */
     @PostMapping("delete")
     public R deleteAttachment(@RequestBody @Validated(DeleteCheck.class) AttachmentParam attachmentParam) {
         attachmentService.deleteAttachment(attachmentParam);
@@ -60,7 +72,7 @@ public class AttachmentController {
 
 
     /**
-     * 文件详情
+     * 附件详情
      *
      * @param attachmentId 文件ID
      * @return attachmentVO

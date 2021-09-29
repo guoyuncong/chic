@@ -33,6 +33,13 @@ public interface AttachmentService extends IService<Attachment> {
     void deleteAttachment(AttachmentParam attachmentParam);
 
     /**
+     * 删除附件
+     *
+     * @param attachmentParam 请求参数
+     */
+    void updateAttachment(AttachmentParam attachmentParam);
+
+    /**
      * 文件详情
      *
      * @param attachmentId 文件ID

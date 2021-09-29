@@ -108,9 +108,18 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
     }
 
     @Override
+    public void updateAttachment(AttachmentParam attachmentParam) {
+        Attachment attachment = checkAttachmentExist(attachmentParam.getAttachmentId());
+        attachment.setAttachmentName(attachmentParam.getAttachmentName());
+        this.baseMapper.updateById(attachment);
+    }
+
+    @Override
     public AttachmentVO detailAttachment(String attachmentId) {
-        Attachment attachment = this.baseMapper.selectById(attachmentId);
-        return AttachmentConvert.INSTANCE.convert2attachmentVO(attachment);
+        Attachment attachment = checkAttachmentExist(attachmentId);
+        AttachmentVO attachmentVO = AttachmentConvert.INSTANCE.convert2attachmentVO(attachment);
+        setPath(attachmentVO);
+        return attachmentVO;
     }
 
     @Override
@@ -121,17 +130,24 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
         queryWrapper.orderByDesc(Attachment::getCreateTime);
         Page<Attachment> attachmentPage = this.baseMapper.selectPage(page, queryWrapper);
         List<AttachmentVO> attachmentVOS = AttachmentConvert.INSTANCE.convert2attachmentVOS(attachmentPage.getRecords());
-        // 如果附件类型为本地附件类型，需要拼接服务地址
-        String blogBaseUrl = optionService.getBlogBaseUrl();
-        attachmentVOS.forEach(attachmentVO -> {
-            // 本地服务器路径，需要拼接 BLOG_URL:PORT
-            if (Objects.equals(attachmentVO.getAttachmentType(), AttachmentType.LOCAL)) {
-                String path = StrUtil.concat(Boolean.TRUE, blogBaseUrl, SymbolConstants.LEFT_FORWARD_SLASH, attachmentVO.getPath());
-                attachmentVO.setPath(path);
-            }
-        });
+        attachmentVOS.forEach(this::setPath);
         return PageConvertUtil.convert(attachmentPage, attachmentVOS);
     }
+
+    /**
+     * 处理附件地址
+     *
+     * @param attachmentVO vo
+     */
+    private void setPath(AttachmentVO attachmentVO) {
+        // 本地服务器路径，需要拼接 BLOG_URL:PORT
+        if (Objects.equals(attachmentVO.getAttachmentType(), AttachmentType.LOCAL)) {// 如果附件类型为本地附件类型，需要拼接服务地址
+            String blogBaseUrl = optionService.getBlogBaseUrl();
+            String path = StrUtil.concat(Boolean.TRUE, blogBaseUrl, SymbolConstants.LEFT_FORWARD_SLASH, attachmentVO.getPath());
+            attachmentVO.setPath(path);
+        }
+    }
+
 
     /**
      * 核验附件是否存在

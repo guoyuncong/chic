@@ -1,7 +1,10 @@
 package com.chic.system.vo;
 
 import com.chic.system.enmus.AttachmentType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 /**
  * 附件
@@ -51,4 +54,10 @@ public class AttachmentVO {
      * 宽度
      */
     private Integer width;
+
+    /**
+     * 上传日期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private LocalDateTime createTime;
 }
