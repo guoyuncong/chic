@@ -32,21 +32,20 @@ public class PostTagServiceImpl extends ServiceImpl<PostTagMapper, PostTag> impl
 
     @Override
     public void savePostTag(String postId, Set<String> tagIds) {
-        if (CollUtil.isEmpty(tagIds) || StrUtil.isEmpty(postId)) {
-            return;
-        }
         // 删除已存在
         LambdaQueryWrapper<PostTag> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(PostTag::getPostId, postId);
         this.baseMapper.delete(queryWrapper);
         // 新增
-        List<PostTag> postTags = tagIds.stream().map(tagId -> {
-            PostTag postTag = new PostTag();
-            postTag.setPostId(postId);
-            postTag.setTagId(tagId);
-            return postTag;
-        }).collect(Collectors.toList());
-        this.saveBatch(postTags);
+        if (CollUtil.isNotEmpty(tagIds)) {
+            List<PostTag> postTags = tagIds.stream().map(tagId -> {
+                PostTag postTag = new PostTag();
+                postTag.setPostId(postId);
+                postTag.setTagId(tagId);
+                return postTag;
+            }).collect(Collectors.toList());
+            this.saveBatch(postTags);
+        }
     }
 
     @Override

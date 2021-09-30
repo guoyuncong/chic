@@ -32,21 +32,20 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
 
     @Override
     public void savePostCategories(String postId, Set<String> categoryIds) {
-        if (CollUtil.isEmpty(categoryIds) || StrUtil.isEmpty(postId)) {
-            return;
-        }
         // 删除已存在
         LambdaQueryWrapper<PostCategory> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(PostCategory::getPostId, postId);
         this.baseMapper.delete(queryWrapper);
         // 新增
-        List<PostCategory> postCategories = categoryIds.stream().map(categoryId -> {
-            PostCategory postCategory = new PostCategory();
-            postCategory.setPostId(postId);
-            postCategory.setCategoryId(categoryId);
-            return postCategory;
-        }).collect(Collectors.toList());
-        this.saveBatch(postCategories);
+        if (CollUtil.isNotEmpty(categoryIds)) {
+            List<PostCategory> postCategories = categoryIds.stream().map(categoryId -> {
+                PostCategory postCategory = new PostCategory();
+                postCategory.setPostId(postId);
+                postCategory.setCategoryId(categoryId);
+                return postCategory;
+            }).collect(Collectors.toList());
+            this.saveBatch(postCategories);
+        }
     }
 
     @Override
