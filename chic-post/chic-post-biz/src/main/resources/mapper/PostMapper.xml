@@ -9,6 +9,7 @@
         <result column="status" property="status" />
         <result column="abbr" property="abbr" />
         <result column="digest" property="digest" />
+        <result column="thumbnail" property="thumbnail" />
         <result column="publish_time" property="publishTime" />
         <result column="visit_num" property="visitNum" />
         <result column="update_num" property="updateNum" />
@@ -81,6 +82,7 @@
             post.title,
             post.abbr,
             post.digest,
+            post.thumbnail,
             post.publish_time,
             post.status,
             post.visit_num,
