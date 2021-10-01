@@ -101,7 +101,12 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
         log.info("删除附件[{}]", path);
         File file = new File(path);
         if (file.exists()) {
-            log.info("删除附件[{}]成功", path);
+            log.info("删除附件[{}]路径存在", path);
+            if (file.delete()) {
+                log.info("删除附件[{}]成功", path);
+            } else {
+                log.info("删除附件[{}]失败", path);
+            }
         }
         // 数据库删除
         this.baseMapper.deleteById(attachmentId);
