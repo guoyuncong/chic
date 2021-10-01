@@ -73,6 +73,7 @@
                 )
             </if>
         </where>
+        order by post.publish_time desc
     </select>
 
     <select id="selectPostSimpleByPostIds" resultMap="pagePost">
