@@ -47,4 +47,9 @@ public class CategoryParam {
      * 排序
      */
     private Integer sort;
+
+    /**
+     * 封面图
+     */
+    private String thumbnail;
 }
