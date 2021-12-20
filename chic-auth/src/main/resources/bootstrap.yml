@@ -1,0 +1,39 @@
+server:
+  port: 8020
+  servlet:
+    context-path: /auth
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/chic?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+  jackson:
+    serialization:
+      write-dates-as-timestamps: true
+mybatis-plus:
+  configuration:
+    # 该配置会将sql语句和查询的结果都打印到控制台
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#spring:
+#  application:
+#    name: @artifactId@
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: ${NACOS_HOST:127.0.0.1}:${NACOS_PORT:8848}
+#        namespace: @project.namespace@
+#      config:
+#        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+#        file-extension: yaml
+#        namespace: @project.namespace@
+#        extension-configs:
+#          -
+#            dataId: application-common.yaml
+#            group: DEFAULT_GROUP
+#            refresh: true
+jwt:
+  secret: 123456
+  expiration: 1234
+  tokenHead: Bearer
+  tokenHeader: access_token

@@ -7,6 +7,7 @@
     <module>chic-system</module>
     <module>chic-common</module>
     <module>chic-gateway</module>
+    <module>chic-auth</module>
   </modules>
 
   <groupId>com.chic</groupId>
